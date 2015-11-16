@@ -1,0 +1,6 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<process xmlns="http://xmlns.oracle.com/EADemoSoaApplication/TestUpdateXMLTransform/BPELProcess1">
+   <ns0:input xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns0="http://xmlns.oracle.com/EADemoSoaApplication/TestUpdateXMLTransform/BPELProcess1">
+      <ns0:input>asdasdasd</ns0:input>
+   </ns0:input>
+</process>

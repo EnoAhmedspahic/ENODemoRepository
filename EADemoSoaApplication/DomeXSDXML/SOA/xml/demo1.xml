@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<exampleElement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://home24.de/somePurpose/someService/someOperation ../Schemas/demo1.xsd"
+                xmlns="http://home24.de/somePurpose/someService/someOperation">
+  <element1></element1>
+  <element2></element2>
+  <choice1></choice1>
+  <!--
+  <choice2>
+  </choice2>-->
+</exampleElement>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:dts="http://ea.com/demotestschema"
+            targetNamespace="http://ea.com/demotestschema" elementFormDefault="qualified">
+  <xsd:element name="requestElement" type="dts:ComplexRequestType">
+    <xsd:annotation>
+      <xsd:documentation>A sample element</xsd:documentation>
+    </xsd:annotation>
+  </xsd:element>
+  <xsd:element name="responseElement" type="dts:ComplexResponseType"/>
+  <xsd:complexType name="ComplexRequestType">
+    <xsd:sequence>
+      <xsd:element name="myList" type="dts:ComplexListType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ComplexResponseType">
+    <xsd:sequence>
+      <xsd:element name="myList" type="dts:ComplexListType"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ComplexListType">
+    <xsd:sequence>
+      <xsd:element name="keyValue" type="dts:ComplexKeyValue" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ComplexKeyValue">
+    <xsd:sequence>
+      <xsd:element name="key" type="xsd:string"/>
+      <xsd:element name="value" type="xsd:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="ind"/>
+  </xsd:complexType>
+</xsd:schema>

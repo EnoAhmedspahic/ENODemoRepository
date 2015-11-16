@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<getPersonDataResponse xmlns="http://personDetails/transactions">
+   <person>
+      <name>name1</name>
+      <surname>surname2</surname>
+      <educationList>
+         <education>
+            <name>name3</name>
+            <year>4</year>
+         </education>
+         <education>
+            <name>name5</name>
+            <year>6</year>
+         </education>
+         <education>
+            <name>name7</name>
+            <year>8</year>
+         </education>
+      </educationList>
+   </person>
+</getPersonDataResponse>

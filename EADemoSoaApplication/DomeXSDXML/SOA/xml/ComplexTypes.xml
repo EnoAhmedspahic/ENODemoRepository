@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<exampleElement xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="http://www.example2 ../Schemas/ComplexTypes.xsd" xmlns="http://www.example2" attributeinline="asd">
+  <tempElement attribute1="asd" attribute2="asd" >test1</tempElement>
+  <someString>asd</someString>
+</exampleElement>

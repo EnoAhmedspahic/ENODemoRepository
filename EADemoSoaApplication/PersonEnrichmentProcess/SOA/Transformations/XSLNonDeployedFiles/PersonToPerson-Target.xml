@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<ns0:getPersonDataResponse xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://oracle.com/sca/soapservice/EADemoSoaApplication/MyDetailsProject/PersonDataService" xmlns:ns0="http://personDetails/transactions">
+   <ns0:person>
+      <ns0:name>name1</ns0:name>
+      <ns0:surname>surname2</ns0:surname>
+      <ns0:educationList>
+         <ns0:education>
+            <ns0:name>name3</ns0:name>
+            <ns0:year>4</ns0:year>
+         </ns0:education>
+         <ns0:education>
+            <ns0:name>name5</ns0:name>
+            <ns0:year>6</ns0:year>
+         </ns0:education>
+         <ns0:education>
+            <ns0:name>name7</ns0:name>
+            <ns0:year>8</ns0:year>
+         </ns0:education>
+      </ns0:educationList>
+   </ns0:person>
+</ns0:getPersonDataResponse>

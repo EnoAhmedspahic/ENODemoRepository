@@ -1,0 +1,111 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Wed Nov 11 22:49:22 CET 2015
+  Author:  eno.ahmedspahic
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="DoEnrichment"
+               targetNamespace="http://xmlns.oracle.com/EADemoSoaApplication/PersonEnrichmentProcess/DoEnrichment"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/EADemoSoaApplication/PersonEnrichmentProcess/DoEnrichment"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://oracle.com/sca/soapservice/EADemoSoaApplication/MyDetailsProject/PersonDataService"
+         xmlns:ns2="http://personDetails/transactions"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/file/EADemoSoaApplication/PersonEnrichmentProcess/TestFile"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions" xmlns:ess="http://xmlns.oracle.com/scheduler"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <import namespace="http://oracle.com/sca/soapservice/EADemoSoaApplication/MyDetailsProject/PersonDataService"
+          location="../WSDLs/PersonDataServiceWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"
+          ui:processWSDL="true"/>
+  <partnerLinks>
+    <partnerLink name="PersonEnrichmentProcess" partnerLinkType="ns1:PersonEnrichmentProcess" myRole="execute_ptt"/>
+    <partnerLink name="MyDetailsService" partnerLinkType="ns1:MyDetailsService" partnerRole="execute_ptt"/>
+    <partnerLink name="TestFile" partnerLinkType="ns3:Write_plt" partnerRole="Write_role"/>
+  </partnerLinks>
+  <variables>
+    <variable name="inputVariable" messageType="ns1:requestMessage"/>
+    <variable name="outputVariable" messageType="ns1:replyMessage"/>
+    <variable name="InvokeMyDetailsIn" messageType="ns1:requestMessage"/>
+    <variable name="InvokeMyDetailsOut" messageType="ns1:replyMessage"/>
+    <variable name="Invoke1_Write_InputVariable" messageType="ns3:Write_msg"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in DoEnrichment.wsdl) -->
+    <receive name="receiveInput" variable="inputVariable" createInstance="yes" partnerLink="PersonEnrichmentProcess"
+             portType="ns1:execute_ptt" operation="execute"/>
+    <assign name="AssignIn">
+      <copy>
+        <from>$inputVariable.pdreq/ns2:name</from>
+        <to>$InvokeMyDetailsIn.pdreq/ns2:name</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.pdreq/ns2:surname</from>
+        <to>$InvokeMyDetailsIn.pdreq/ns2:surname</to>
+      </copy>
+    </assign>
+    <invoke name="InvokeMyDetails" partnerLink="MyDetailsService" portType="ns1:execute_ptt"
+            operation="execute" inputVariable="InvokeMyDetailsIn" outputVariable="InvokeMyDetailsOut"
+            bpelx:invokeAsDetail="no"/>
+    <assign name="transformResponse">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+      </bpelx:annotation>
+      <copy>
+        <from>ora:doXSLTransformForDoc("../Transformations/PersonToPerson.xsl", $InvokeMyDetailsOut.pdresp)</from>
+        <to variable="outputVariable" part="pdresp"/>
+      </copy>
+    </assign>
+    <assign name="prepareFile">
+      <bpelx:annotation>
+        <bpelx:pattern patternName="bpelx:transformation"></bpelx:pattern>
+      </bpelx:annotation>
+      <copy>
+        <from>ora:doXSLTransformForDoc("../Transformations/Transformation_1.xsl", $inputVariable.pdreq)</from>
+        <to variable="Invoke1_Write_InputVariable" part="opaque"/>
+      </copy>
+    </assign>
+    <invoke name="Invoke1" partnerLink="TestFile" portType="ns3:Write_ptt" operation="Write"
+            inputVariable="Invoke1_Write_InputVariable" bpelx:invokeAsDetail="no"/>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" variable="outputVariable" partnerLink="PersonEnrichmentProcess"
+           portType="ns1:execute_ptt" operation="execute"/>
+  </sequence>
+</process>

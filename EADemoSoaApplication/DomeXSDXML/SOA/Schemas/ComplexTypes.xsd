@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ct2="http://www.example2"
+            targetNamespace="http://www.example2" elementFormDefault="qualified"
+            xmlns:xml="http://www.w3.org/XML/1998/namespace">
+  <xsd:element name="exampleElement">
+    <xsd:annotation>
+      <xsd:documentation>A sample element</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:complexContent>
+        <xsd:extension base="ct2:complexType2"/>
+      </xsd:complexContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:complexType name="complexType3">
+    <xsd:sequence>
+      <xsd:element name="element1"/>
+    </xsd:sequence>
+    <xsd:attribute name="attribute1"/>
+  </xsd:complexType>
+  <xsd:complexType name="CT1type" xml:base="property1" xml:lang="as">
+    <xsd:annotation id="AAS">
+      <xsd:documentation>AS</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="ct2:simpleType1">
+        <xsd:attributeGroup ref="ct2:attributeGroup1"/>
+        <xsd:attribute name="attribute1"/>
+        <xsd:anyAttribute/>
+      </xsd:extension>
+     
+    </xsd:simpleContent>
+    
+  </xsd:complexType>
+  <xsd:complexType name="complexType2">
+    <xsd:sequence>
+      <xsd:element name="tempElement" type="ct2:CT1type"/>
+      <xsd:element name="someString" type="xsd:string"/>
+    </xsd:sequence>
+    <xsd:attribute name="attributeinline"/>
+  </xsd:complexType>
+  <xsd:simpleType name="simpleType1">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="test1"/>
+      <xsd:enumeration value="test2"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:attributeGroup name="attributeGroup1">
+    <xsd:attribute name="attribute1"/>
+    <xsd:attribute name="attribute2"/>
+  </xsd:attributeGroup>
+</xsd:schema>
